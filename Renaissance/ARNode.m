@@ -13,35 +13,6 @@
 @synthesize ARView,planeGeometry;
 @synthesize nodeLocation,playerLocation;
 
-- (id)init
-{
-    self = [super init];
-    if (self)
-    {
-        //NSLog(@"init ed");
-    }
-    return self;
-}
-
-+ (id)node
-{
-    id node = [super node];
-    if (node)
-    {
-        //NSLog(@"node ed");
-    }
-    return node;
-}
-
-+ (ARNode *)nodeWithGeometry:(SCNGeometry *)geometry
-{
-    id node = [super nodeWithGeometry:geometry];
-    if (node)
-    {
-        //NSLog(@"node ed");
-    }
-    return node;
-}
 
 - (void)setNodeWithARView:(UIView *)view
              nodeLocation:(CLLocation *)nodeCLLocation
@@ -49,17 +20,22 @@
 {
     NSLog(@"setNodeWithARView");
     self.ARView = view;
+    //ARView.transform = CGAffineTransformMakeScale(-1, -1);
     ARView.layer.geometryFlipped = YES;
     self.nodeLocation = nodeCLLocation;
     self.playerLocation = playerCLLocation;
     //SCNBox * boxGeometry = [SCNBox boxWithWidth:100 height:100 length:100 chamferRadius:10];
-    planeGeometry = [SCNPlane planeWithWidth:view.bounds.size.width height:view.bounds.size.height];
-    planeGeometry.cornerRadius = 10;
+    planeGeometry = [SCNPlane planeWithWidth:view.bounds.size.width/4 height:view.bounds.size.height/4];
+    planeGeometry.cornerRadius = 5;
     self.geometry = planeGeometry;
     SCNMaterial *planeMaterial = [SCNMaterial material];
-    planeMaterial.diffuse.contents = [self imageWithView:ARView];
+    planeMaterial.diffuse.contents = ARView.layer;
+    //planeMaterial.diffuse.contents = [self imageWithView:ARView];
     planeGeometry.materials = @[planeMaterial];
     planeMaterial.doubleSided = YES;
+    
+    
+    //self.scale = SCNVector3Make(-1, 1, 1);
     
     CLLocationDistance lineMeters = [nodeLocation distanceFromLocation:playerLocation];
     
@@ -97,7 +73,10 @@
     
     NSLog(@"longitudeDistance : %f latitudeDistance : %f",longitudePosition,latitudePosition);
     
-    self.position = SCNVector3Make(latitudePosition, lineMeters / 10, longitudePosition);
+    //self.position = SCNVector3Make(longitudePosition, lineMeters / 6, latitudePosition);
+
+    self.position = SCNVector3Make(latitudePosition, lineMeters / 6, longitudePosition);
+
     SCNNode *virtualCameraNode = [SCNNode node];
     virtualCameraNode.position = SCNVector3Make(0, 0, 0);
     self.constraints = @[[SCNLookAtConstraint lookAtConstraintWithTarget:virtualCameraNode]];
@@ -111,6 +90,8 @@
     UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
+    
+    
     
     return img;
 }

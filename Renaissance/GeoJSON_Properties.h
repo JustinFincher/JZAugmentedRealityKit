@@ -14,5 +14,5 @@
 @end
 @interface GeoJSON_Properties : NSObject
 @property (copy, nonatomic) NSString *Title;
-@property (copy, nonatomic) NSNumber *Level;
+//@property (copy, nonatomic) NSNumber *Level;
 @end

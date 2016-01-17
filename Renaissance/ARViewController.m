@@ -13,6 +13,8 @@
 #import "MJExtension.h"
 @import CoreLocation;
 
+#define fontSize 25.0f
+
 @interface ARViewController ()<ARDataSourceDelegate,CLLocationManagerDelegate>
 
 @property (nonatomic) BOOL isLocated;
@@ -103,7 +105,7 @@
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
 
-    NSURL *URL = [NSURL URLWithString:@"https://gist.githubusercontent.com/anonymous/17ddbe507a8e88c49ab1/raw/ce9b48428b650464a9cb00839bd761815f73be67/map.geojson"];
+    NSURL *URL = [NSURL URLWithString:@"https://gist.githubusercontent.com/anonymous/71743091575a8c3c2412/raw/f0c5f044de5fc68c7da184665241048306cf1343/map.geojson"];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     
     NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
@@ -129,13 +131,18 @@
     {
         NSString *titleString = [[index valueForKey:@"properties"] valueForKey:@"Title"];
         NSLog(@"%@",titleString);
-        UIView *ARNodeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 240, 160)];
+        UIView *ARNodeView = [[UIView alloc] init];
         ARNodeView.backgroundColor = [UIColor whiteColor];
-        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 240, 160)];
+        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(100, 60, [self width:titleString], 40)];
         title.text = titleString;
-        title.font = [UIFont systemFontOfSize:30.0f];
+        title.font = [UIFont systemFontOfSize:fontSize];
         title.textAlignment = NSTextAlignmentCenter;
         [ARNodeView addSubview:title];
+        
+        
+        UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 80, 80)];
+        iconImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%u",arc4random()%9+1]];
+        [ARNodeView addSubview:iconImageView];
         
         
         NSLog(@"if (index && playerLocation)");
@@ -144,6 +151,10 @@
         double latitude = [[coordinatesArray lastObject] doubleValue];
         //CLLocationCoordinate2D nodeCoordinates = CLLocationCoordinate2DMake(latitude, longitude);
         CLLocation * nodeLocation  = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+        
+        
+        ARNodeView.frame = CGRectMake(0, 0, 100+title.frame.size.width, 100);
+        
         [node setNodeWithARView:ARNodeView nodeLocation:nodeLocation playerLocation:playerLocation];
     }
     
@@ -174,6 +185,11 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(float) width:(NSString *)text{
+    CGSize size=[text sizeWithFont:[UIFont systemFontOfSize:fontSize]constrainedToSize:CGSizeMake(MAXFLOAT,36)];
+    return size.width;
 }
 
 /*

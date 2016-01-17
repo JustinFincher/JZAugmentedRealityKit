@@ -36,7 +36,7 @@
         [self setupARScene];
         [self setupCMMotionManager];
         ARNodeArray = [self setARNodeArray];
-        [self setupMapNode];
+        //[self setupMapNode];
     }
     return self;
 }
@@ -105,7 +105,7 @@
              playerAttitude = motion.attitude;
              CMQuaternion quat = motion.attitude.quaternion;
              cameraNode.orientation = [self orientationFromCMQuaternion:quat];
-             mapNode.eulerAngles = SCNVector3Make(-M_PI_2, M_PI-cameraNode.eulerAngles.y, 0);
+             //mapNode.eulerAngles = SCNVector3Make(-M_PI_2, M_PI-cameraNode.eulerAngles.y, 0);
              playerAttitudeYawLabel.text = [NSString stringWithFormat:@"%.1f°",CC_RADIANS_TO_DEGREES(playerAttitude.yaw)];
          }];
     }
@@ -123,7 +123,7 @@
     mapNodeMaterial.transparencyMode = SCNTransparencyModeAOne;
 
     planeGeometry.materials = @[mapNodeMaterial];
-    [self.scene.rootNode addChildNode:mapNode];
+    //[self.scene.rootNode addChildNode:mapNode];
     
     
     invisbleMapView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1024,1024)];
@@ -188,7 +188,7 @@
     //NSLog(@"Yaw : %f Roll : %f Pitch : %f",roundf((float)(CC_RADIANS_TO_DEGREES(cameraYaw))),roundf((float)(CC_RADIANS_TO_DEGREES(cameraRoll))),roundf((float)(CC_RADIANS_TO_DEGREES(cameraPitch))));
     //NSLog(@"Yaw : %f Roll : %f Pitch : %f",cameraYaw,cameraRoll,cameraPitch);
     
-    [self refreshMapNodeTexture];
+    //[self refreshMapNodeTexture];
 }
 
 - (void)reloadData
